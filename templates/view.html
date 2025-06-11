@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Exam Schedule - Automated Time-Table Scheduler</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        .exam-title {
+            color: #007bff;
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .no-students {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Generated Exam Schedule</h3>
+                        {% if message %}
+                            <p class="text-warning">{{ message }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        {% if timetable_data %}
+                            {% set exam_schedules = {} %}
+                            {% for date, hours in timetable_data.items() %}
+                                {% for hour, rooms in hours.items() %}
+                                    {% for room in rooms %}
+                                        {% for exam in room.exams %}
+                                            {% if exam.code not in exam_schedules %}
+                                                {% set _ = exam_schedules.update({exam.code: []}) %}
+                                            {% endif %}
+                                            {% for student in exam.students %}
+                                                {% set _ = exam_schedules[exam.code].append({
+                                                    'student': student,
+                                                    'date': date,
+                                                    'time': hour,
+                                                    'room': room.room_id
+                                                }) %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% for exam_code, schedules in exam_schedules.items() %}
+                                <div class="exam-title">Exam: {{ exam_code }}</div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Student Name</th>
+                                                <th>Roll Number</th>
+                                                <th>Date</th>
+                                                <th>Time Slot</th>
+                                                <th>Room Number</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if schedules %}
+                                                {% for schedule in schedules %}
+                                                    {% set student_parts = schedule.student.split(' (') %}
+                                                    <tr>
+                                                        <td>{{ student_parts[0] }}</td>
+                                                        <td>{{ student_parts[1].rstrip(')') }}</td>
+                                                        <td>{{ schedule.date }}</td>
+                                                        <td>{{ schedule.time }}</td>
+                                                        <td>{{ schedule.room }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="5" class="no-students">No students assigned to this exam</td>
+                                                </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">No exam schedule to display. Please generate one from the <a href="{{ url_for('form_page') }}">form page</a>.</p>
+                        {% endif %}
+                        <p class="mt-4 text-center"><a href="{{ url_for('form_page') }}">Back to Schedule Generation</a></p>
+                        <p class="text-center"><a href="{{ url_for('index') }}">Back to Home</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html> 
