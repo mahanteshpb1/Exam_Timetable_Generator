@@ -61,6 +61,11 @@
                                 <input type="number" class="form-control" id="numRooms" name="numRooms" min="1" value="5" required>
                             </div>
 
+                            <div class="form-group" id="roomNumbersContainer">
+                                <label>Enter Room Numbers:</label>
+                                <div id="roomNumbersInputs"></div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="roomCapacity">Room Capacity:</label>
                                 <input type="number" class="form-control" id="roomCapacity" name="roomCapacity" min="1" value="30" required>
@@ -87,5 +92,24 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function updateRoomInputs() {
+            var numRooms = parseInt(document.getElementById('numRooms').value) || 0;
+            var container = document.getElementById('roomNumbersInputs');
+            container.innerHTML = '';
+            for (var i = 0; i < numRooms; i++) {
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'form-control mb-2';
+                input.name = 'roomNumbers[]';
+                input.placeholder = 'Room number for Room ' + (i + 1);
+                input.required = true;
+                container.appendChild(input);
+            }
+        }
+        document.getElementById('numRooms').addEventListener('input', updateRoomInputs);
+        // Initialize on page load
+        updateRoomInputs();
+    </script>
 </body>
 </html> 

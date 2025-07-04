@@ -68,12 +68,13 @@ class InputData:
     num_exams: int = 0
     total_possible_exam_slots: int = 0
 
-    def __init__(self, excel_file_path: str, num_rooms: int, room_capacity: int, start_date_str: str, end_date_str: str):
+    def __init__(self, excel_file_path: str, num_rooms: int, room_capacity: int, start_date_str: str, end_date_str: str, room_numbers=None):
         self.excel_file_path = excel_file_path
         self.num_rooms = num_rooms
         self.room_capacity = room_capacity
         self.start_date = date.fromisoformat(start_date_str)
         self.end_date = date.fromisoformat(end_date_str)
+        self.room_numbers = room_numbers if room_numbers is not None else list(range(num_rooms))
 
         self._load_data_from_excel()
         self._generate_rooms()
@@ -117,7 +118,8 @@ class InputData:
             raise
 
     def _generate_rooms(self):
-        self.rooms = [Room(id=i, capacity=self.room_capacity) for i in range(self.num_rooms)]
+        # Use custom room numbers if provided
+        self.rooms = [Room(id=int(self.room_numbers[i]), capacity=self.room_capacity) for i in range(self.num_rooms)]
 
 
 # --- Global TimeTable Slots Generation (Redesigned for Exam Scheduling) ---
