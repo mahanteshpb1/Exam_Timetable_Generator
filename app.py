@@ -29,7 +29,7 @@ def form_page():
 
             # Retrieve other form data
             num_rooms = int(request.form.get('numRooms'))
-            room_capacity = int(request.form.get('roomCapacity'))
+            room_capacities = list(map(int, request.form.getlist('roomCapacities[]')))
             start_date_str = request.form.get('startDate')
             end_date_str = request.form.get('endDate')
 
@@ -41,12 +41,11 @@ def form_page():
             # Validate dates
             if not start_date_str or not end_date_str:
                 raise ValueError("Start date and End date are required.")
-            
-            # Initialize InputData and TimeTable with new parameters, including custom room numbers
+
             input_data_instance = InputData(
                 excel_file_path=temp_excel_path,
                 num_rooms=num_rooms,
-                room_capacity=room_capacity,
+                room_capacities=room_capacities,
                 start_date_str=start_date_str,
                 end_date_str=end_date_str,
                 room_numbers=room_numbers

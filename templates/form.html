@@ -67,11 +67,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="roomCapacity">Room Capacity:</label>
-                                <input type="number" class="form-control" id="roomCapacity" name="roomCapacity" min="1" value="30" required>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="startDate">Start Date (YYYY-MM-DD):</label>
                                 <input type="date" class="form-control" id="startDate" name="startDate" required>
                             </div>
@@ -92,24 +87,47 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function updateRoomInputs() {
-            var numRooms = parseInt(document.getElementById('numRooms').value) || 0;
-            var container = document.getElementById('roomNumbersInputs');
-            container.innerHTML = '';
-            for (var i = 0; i < numRooms; i++) {
-                var input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'form-control mb-2';
-                input.name = 'roomNumbers[]';
-                input.placeholder = 'Room number for Room ' + (i + 1);
-                input.required = true;
-                container.appendChild(input);
-            }
+<script>
+    function updateRoomInputs() {
+        var numRooms = parseInt(document.getElementById('numRooms').value) || 0;
+        var container = document.getElementById('roomNumbersInputs');
+        container.innerHTML = '';
+
+        for (var i = 0; i < numRooms; i++) {
+            var row = document.createElement('div');
+            row.className = 'form-row mb-2 align-items-center';
+
+            var roomCol = document.createElement('div');
+            roomCol.className = 'col-10';  // 11/12 ~ 91%
+            var roomInput = document.createElement('input');
+            roomInput.type = 'text';
+            roomInput.className = 'form-control';
+            roomInput.name = 'roomNumbers[]';
+            roomInput.placeholder = 'Room ' + (i + 1);
+            roomInput.required = true;
+            roomCol.appendChild(roomInput);
+
+            var capacityCol = document.createElement('div');
+            capacityCol.className = 'col-2';  // 1/12 ~ 9%
+            var capacityInput = document.createElement('input');
+            capacityInput.type = 'number';
+            capacityInput.className = 'form-control';
+            capacityInput.name = 'roomCapacities[]';
+            capacityInput.placeholder = 'Capacity';
+            capacityInput.min = '1';
+            capacityInput.required = true;
+            capacityCol.appendChild(capacityInput);
+
+            row.appendChild(roomCol);
+            row.appendChild(capacityCol);
+
+            container.appendChild(row);
         }
-        document.getElementById('numRooms').addEventListener('input', updateRoomInputs);
-        // Initialize on page load
-        updateRoomInputs();
-    </script>
+    }
+
+    document.getElementById('numRooms').addEventListener('input', updateRoomInputs);
+    updateRoomInputs();
+</script>
+
 </body>
 </html> 

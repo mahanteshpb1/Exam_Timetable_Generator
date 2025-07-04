@@ -1,11 +1,12 @@
 # scheduler.py
 
+import copy  # For deep cloning
 import random
-import copy # For deep cloning
 from dataclasses import dataclass, field
-from typing import List, Optional, Set, Dict
-import pandas as pd
 from datetime import date, timedelta
+from typing import Dict, List, Optional, Set
+
+import pandas as pd
 
 # --- New Data Classes for Exam Scheduling ---
 
@@ -22,7 +23,7 @@ class Exam:
 
 @dataclass
 class Room:
-    id: int
+    id: str
     capacity: int
 
     def __hash__(self):
@@ -67,15 +68,14 @@ class InputData:
     # New attributes for exam scheduling
     num_exams: int = 0
     total_possible_exam_slots: int = 0
-
-    def __init__(self, excel_file_path: str, num_rooms: int, room_capacity: int, start_date_str: str, end_date_str: str, room_numbers=None):
+    def __init__(self, excel_file_path: str, num_rooms: int, room_capacities: List[int], start_date_str: str, end_date_str: str, room_numbers=None):
         self.excel_file_path = excel_file_path
         self.num_rooms = num_rooms
-        self.room_capacity = room_capacity
+        self.room_capacities = room_capacities
         self.start_date = date.fromisoformat(start_date_str)
         self.end_date = date.fromisoformat(end_date_str)
         self.room_numbers = room_numbers if room_numbers is not None else list(range(num_rooms))
-
+    
         self._load_data_from_excel()
         self._generate_rooms()
         self.num_exams = len(self.exams)
@@ -118,8 +118,8 @@ class InputData:
             raise
 
     def _generate_rooms(self):
-        # Use custom room numbers if provided
-        self.rooms = [Room(id=int(self.room_numbers[i]), capacity=self.room_capacity) for i in range(self.num_rooms)]
+        self.rooms = [Room(id=str(self.room_numbers[i]), capacity=int(self.room_capacities[i])) for i in range(self.num_rooms)]
+
 
 
 # --- Global TimeTable Slots Generation (Redesigned for Exam Scheduling) ---
@@ -452,53 +452,3 @@ class SchedulerMain:
             print(f"Most fit chromosome from this generation has fitness = {chromosome_list[0].fitness}\n")
         else:
             print("No chromosomes in this generation.\n")
-
-# Example usage (will be removed once integrated into Flask)
-if __name__ == "__main__":
-    # Create a dummy excel file for testing
-    dummy_data = {
-        'Student Name': ['Alice', 'Alice', 'Bob', 'Bob', 'Charlie', 'David', 'Alice'],
-        'Roll Number': ['S001', 'S001', 'S002', 'S002', 'S003', 'S004', 'S001'],
-        'Exam Code': ['EX101', 'EX102', 'EX101', 'EX103', 'EX102', 'EX101', 'EX103']
-    }
-    dummy_df = pd.DataFrame(dummy_data)
-    dummy_excel_path = "exam_data.xlsx"
-    dummy_df.to_excel(dummy_excel_path, index=False)
-
-    print(f"Dummy Excel file created at: {dummy_excel_path}")
-
-    try:
-        input_data_instance = InputData(
-            excel_file_path=dummy_excel_path,
-            num_rooms=2,
-            room_capacity=2,
-            start_date_str="2025-07-01",
-            end_date_str="2025-07-02"
-        )
-        print("\nInput Data Loaded Successfully:")
-        print(f"  Number of Students: {len(input_data_instance.students)}")
-        print(f"  Number of Exams: {len(input_data_instance.exams)}")
-        print(f"  Number of Rooms: {len(input_data_instance.rooms)}")
-        print(f"  Start Date: {input_data_instance.start_date}, End Date: {input_data_instance.end_date}")
-        print("  Students and their exams:")
-        for s in input_data_instance.students:
-            print(f"    {s.name} ({s.roll_number}): {s.enrolled_exams}")
-
-
-        timetable_instance = TimeTable(input_data=input_data_instance)
-        print(f"\nTotal possible exam slots generated: {len(timetable_instance.get_slots())}")
-        # for i, slot in enumerate(timetable_instance.get_slots()):
-        #     print(f"Slot {i}: Exam {slot.exam.code}, Room {slot.room.id}, Time {slot.time_slot.date} {slot.time_slot.hour}:00")
-
-        # Run the scheduler
-        scheduler = SchedulerMain(input_data=input_data_instance, timetable=timetable_instance)
-
-        # You can access the final timetable if found:
-        if scheduler.final_chromosome:
-            print("\nFinal Optimal Timetable:")
-            scheduler.final_chromosome.print_schedule()
-        else:
-            print("\nCould not find an optimal timetable within the given generations.")
-
-    except Exception as e:
-        print(f"An error occurred during data loading: {e}") 
