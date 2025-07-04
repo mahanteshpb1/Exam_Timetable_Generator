@@ -84,15 +84,11 @@ class InputData:
         try:
             df = pd.read_excel(self.excel_file_path)
             
-            # Validate required columns
             required_columns = ['Student Name', 'Roll Number', 'Exam Code']
             if not all(col in df.columns for col in required_columns):
                 raise ValueError(f"Excel file must contain columns: {required_columns}")
-
-            # Process students and their enrolled exams
             students_dict: Dict[str, Student] = {}
             exams_set: Set[str] = set() # To collect unique exam codes
-
             for index, row in df.iterrows():
                 roll_number = str(row['Roll Number'])
                 student_name = str(row['Student Name'])

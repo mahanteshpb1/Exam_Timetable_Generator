@@ -138,6 +138,8 @@ def format_exam_schedule_for_display(chromosome: Chromosome, input_data: InputDa
     
     return formatted_data
 
+
+
 if __name__ == '__main__':
-    # No input.txt creation needed anymore
-    app.run(debug=True) 
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
