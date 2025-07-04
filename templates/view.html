@@ -1,142 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generated Exam Schedule - Automated Time-Table Scheduler</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-        .card {
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .table-responsive {
-            margin-top: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        th, td {
-            border: 1px solid #dee2e6;
-            padding: 8px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        th {
-            background-color: #e9ecef;
-        }
-        .exam-title {
-            color: #007bff;
-            font-size: 1.5em;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-        }
-        .no-students {
-            color: #6c757d;
-            font-style: italic;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generated Exam Schedule - Automated Time-Table Scheduler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Header */
+    header {
+      padding: 20px 0;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 119, 198, 0.05), rgba(119, 219, 255, 0.05));
+      pointer-events: none;
+    }
+
+    .card-header {
+      background: none;
+      border-bottom: none;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #ffffff, #77dbff, #ff77c6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card-header .text-warning {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .card-body {
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Exam Title */
+    .exam-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-left: 5px solid #ff77c6;
+      border-radius: 10px;
+      margin: 30px 0 15px;
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Table */
+    .table-responsive {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-weight: 600;
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    td {
+      padding: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .no-students {
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      background: linear-gradient(135deg, #ff77c6, #77dbff);
+      color: #000;
+      box-shadow: 0 10px 30px rgba(255, 119, 198, 0.3);
+      margin: 10px 8px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #77dbff, #ff77c6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn:hover::before {
+      opacity: 1;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(255, 119, 198, 0.5);
+      text-decoration: none;
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .card {
+        padding: 20px;
+      }
+
+      .card-header h3 {
+        font-size: 2rem;
+      }
+
+      .exam-title {
+        font-size: 1.2rem;
+      }
+
+      th, td {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h3>Generated Exam Schedule</h3>
-                        {% if message %}
-                            <p class="text-warning">{{ message }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="card-body">
-                        {% if timetable_data %}
-                            {% set exam_schedules = {} %}
-                            {% for date, hours in timetable_data.items() %}
-                                {% for hour, rooms in hours.items() %}
-                                    {% for room in rooms %}
-                                        {% for exam in room.exams %}
-                                            {% if exam.code not in exam_schedules %}
-                                                {% set _ = exam_schedules.update({exam.code: []}) %}
-                                            {% endif %}
-                                            {% for student in exam.students %}
-                                                {% set _ = exam_schedules[exam.code].append({
-                                                    'student': student,
-                                                    'date': date,
-                                                    'time': hour,
-                                                    'room': room.room_id
-                                                }) %}
-                                            {% endfor %}
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% endfor %}
-                            {% endfor %}
+  <div class="bg-animation"></div>
 
-                            {% for exam_code, schedules in exam_schedules.items() %}
-                                <div class="exam-title">Exam: {{ exam_code }}</div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Student Name</th>
-                                                <th>Roll Number</th>
-                                                <th>Date</th>
-                                                <th>Time Slot</th>
-                                                <th>Room Number</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% if schedules %}
-                                                {% for schedule in schedules %}
-                                                    {% set student_parts = schedule.student.split(' (') %}
-                                                    <tr>
-                                                        <td>{{ student_parts[0] }}</td>
-                                                        <td>{{ student_parts[1].rstrip(')') }}</td>
-                                                        <td>{{ schedule.date }}</td>
-                                                        <td>{{ schedule.time }}</td>
-                                                        <td>{{ schedule.room }}</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            {% else %}
-                                                <tr>
-                                                    <td colspan="5" class="no-students">No students assigned to this exam</td>
-                                                </tr>
-                                            {% endif %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-center">No exam schedule to display. Please generate one from the <a href="{{ url_for('form_page') }}">form page</a>.</p>
-                        {% endif %}
-                        <p class="mt-4 text-center"><a href="{{ url_for('form_page') }}">Back to Schedule Generation</a></p>
-                        <p class="text-center"><a href="{{ url_for('index') }}">Back to Home</a></p>
-                    </div>
-                </div>
+  <header>
+    <nav class="nav">
+      <a href="{{ url_for('index') }}" class="logo">⚡ AutoSchedule</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header text-center">
+        <h3>🗓️ Generated Exam Schedule</h3>
+        {% if message %}
+          <p class="text-warning">{{ message }}</p>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        {% if timetable_data %}
+          {% set exam_schedules = {} %}
+          {% for date, hours in timetable_data.items() %}
+            {% for hour, rooms in hours.items() %}
+              {% for room in rooms %}
+                {% for exam in room.exams %}
+                  {% if exam.code not in exam_schedules %}
+                    {% set _ = exam_schedules.update({exam.code: []}) %}
+                  {% endif %}
+                  {% for student in exam.students %}
+                    {% set _ = exam_schedules[exam.code].append({
+                      'student': student,
+                      'date': date,
+                      'time': hour,
+                      'room': room.room_id
+                    }) %}
+                  {% endfor %}
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+
+          {% for exam_code, schedules in exam_schedules.items() %}
+            <div class="exam-title">📘 Exam: {{ exam_code }}</div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Room</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% if schedules %}
+                    {% for schedule in schedules %}
+                      {% set student_parts = schedule.student.split(' (') %}
+                      <tr>
+                        <td>{{ student_parts[0] }}</td>
+                        <td>{{ student_parts[1].rstrip(')') }}</td>
+                        <td>{{ schedule.date }}</td>
+                        <td>{{ schedule.time }}</td>
+                        <td>{{ schedule.room }}</td>
+                      </tr>
+                    {% endfor %}
+                  {% else %}
+                    <tr>
+                      <td colspan="5" class="no-students">No students assigned to this exam</td>
+                    </tr>
+                  {% endif %}
+                </tbody>
+              </table>
             </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-center">No schedule found. Go to the <a href="{{ url_for('form_page') }}" class="btn"><span>Form Page</span></a> to create one.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('form_page') }}" class="btn"><span>🔁 Generate Another Schedule</span></a>
+          <a href="{{ url_for('index') }}" class="btn"><span>🏠 Back to Home</span></a>
         </div>
+      </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html> 
+</html>

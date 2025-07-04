@@ -9,10 +9,15 @@ app.secret_key = os.urandom(24) # Used for session management
 
 # DB Manager is no longer initialized
 
+# @app.route('/')
+# def index():
+#     # Direct link to the form page
+#     return redirect(url_for('form_page'))
+
 @app.route('/')
 def index():
-    # Direct link to the form page
-    return redirect(url_for('form_page'))
+    return render_template('index.html')
+
 
 @app.route('/form', methods=['GET', 'POST'])
 def form_page():
@@ -141,5 +146,6 @@ def format_exam_schedule_for_display(chromosome: Chromosome, input_data: InputDa
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 10000))
+    # app.run(host='0.0.0.0', port=port)    
+    app.run(debug=True)
