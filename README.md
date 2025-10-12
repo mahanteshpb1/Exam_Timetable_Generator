@@ -17,21 +17,18 @@ It schedules exams efficiently based on student enrollments, room capacities, an
 
 ---
 
+## 🧰 Tech Stack
+
+| Component      | Technology                         |
+|----------------|------------------------------------|
+| Frontend       | HTML, CSS, Jinja2 Templates        |
+| Backend        | Python (Flask)                     |
+| Algorithm      | Genetic Algorithm                  |
+| Data Input     | Excel (.xlsx)                      |
+| Libraries      | pandas, openpyxl, typing, datetime |
+
+
 
 ## 📂 Folder Structure
 
-exam-timetable-generator/
-├── scheduler/
-│ ├── init.py
-│ ├── scheduler.py # Core scheduling & GA logic
-│ ├── models.py # Data classes (Exam, Room, Student, etc.)
-│ └── utils.py # Helper functions
-├── templates/
-│ ├── index.html
-│ ├── form.html
-│ ├── view.html
-│ └── how-to-use.html
-├── static/ # (optional) for CSS/JS
-├── app.py # Flask entry point
-├── requirements.txt
-└── README.md
+
