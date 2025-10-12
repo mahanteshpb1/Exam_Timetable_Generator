@@ -33,7 +33,7 @@ It schedules exams efficiently based on student enrollments, room capacities, an
 
 ⚙️ Installation
 
- 1️⃣ Clone the Repository
+1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/mahanteshpb1/Exam_Timetable_Generator.git
 cd exam-timetable-generator
@@ -53,15 +53,6 @@ pip install -r requirements.txt
 
 4️⃣ Run the App
 python app.py
-
-Home Page
-<img width="2747" height="1616" alt="image" src="https://github.com/user-attachments/assets/a0f2d543-e3cf-491c-be25-1676cde73406" />
-
-Upload the input file
-<img width="1829" height="1617" alt="image" src="https://github.com/user-attachments/assets/e404ab04-17b8-4b58-84dd-ecd790948993" />
-
-Output
-<img width="1743" height="1600" alt="image" src="https://github.com/user-attachments/assets/48870cad-a9e6-4811-97fc-9888bb2a01cf" />
 
 
 
