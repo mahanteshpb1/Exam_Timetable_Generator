@@ -32,3 +32,14 @@ It schedules exams efficiently based on student enrollments, room capacities, an
 ## 📂 Folder Structure
 
 
+---
+
+## ⚙️ Installation
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/<your-username>/exam-timetable-generator.git
+cd exam-timetable-generator
+
+
+
